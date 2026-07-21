@@ -46,19 +46,13 @@ biaya_shopee = harga_jual * (persen_shopee / 100)
 # 4. BIAYA OPERASIONAL
 # ============================
 st.subheader("4️⃣ Biaya Operasional")
-st.caption("Total biaya operasional per bulan (gaji, listrik, bensin, dll dijumlah sendiri), nanti dibagi dengan jumlah produk terjual per bulan")
+st.caption("Persentase dari harga jual (gaji, listrik, bensin, dll dijumlah jadi satu persentase)")
 
-total_operasional_bulanan = st.number_input(
-    "Total biaya operasional per bulan (Rp)",
-    min_value=0.0, value=0.0, step=50000.0, format="%.0f"
+persen_operasional = st.number_input(
+    "Total biaya operasional (%) dari harga jual",
+    min_value=0.0, max_value=100.0, value=10.0, step=0.5
 )
-
-jumlah_produk_bulanan = st.number_input(
-    "Estimasi jumlah produk terjual per bulan (pcs)",
-    min_value=1, value=100, step=1
-)
-
-biaya_operasional_per_unit = total_operasional_bulanan / jumlah_produk_bulanan if jumlah_produk_bulanan > 0 else 0
+biaya_operasional_per_unit = harga_jual * (persen_operasional / 100)
 
 st.divider()
 
