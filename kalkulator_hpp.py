@@ -36,44 +36,22 @@ harga_jual = st.number_input(
     min_value=0.0, value=0.0, step=500.0, format="%.0f"
 )
 
-mode_shopee = st.radio(
-    "Cara hitung biaya Shopee",
-    ["Persentase (%) dari harga jual", "Nominal tetap (Rp)"],
-    horizontal=True
+persen_shopee = st.number_input(
+    "Total biaya Shopee (%) — misal: biaya admin + layanan + iklan",
+    min_value=0.0, max_value=100.0, value=8.0, step=0.5
 )
-
-if mode_shopee == "Persentase (%) dari harga jual":
-    persen_shopee = st.number_input(
-        "Total biaya Shopee (%) — misal: biaya admin + layanan + iklan",
-        min_value=0.0, max_value=100.0, value=8.0, step=0.5
-    )
-    biaya_shopee = harga_jual * (persen_shopee / 100)
-else:
-    biaya_shopee = st.number_input(
-        "Biaya Shopee per produk (Rp)",
-        min_value=0.0, value=0.0, step=500.0, format="%.0f"
-    )
+biaya_shopee = harga_jual * (persen_shopee / 100)
 
 # ============================
 # 4. BIAYA OPERASIONAL
 # ============================
-st.subheader("4️⃣ Biaya Operasional (Gaji, Listrik, Bensin, dll)")
-st.caption("Masukkan total biaya operasional per bulan, nanti dibagi dengan jumlah produk terjual per bulan")
+st.subheader("4️⃣ Biaya Operasional")
+st.caption("Total biaya operasional per bulan (gaji, listrik, bensin, dll dijumlah sendiri), nanti dibagi dengan jumlah produk terjual per bulan")
 
-col1, col2, col3 = st.columns(3)
-with col1:
-    gaji = st.number_input("Gaji karyawan/bulan (Rp)", min_value=0.0, value=0.0, step=50000.0, format="%.0f")
-with col2:
-    listrik = st.number_input("Listrik/bulan (Rp)", min_value=0.0, value=0.0, step=10000.0, format="%.0f")
-with col3:
-    bensin = st.number_input("Bensin/transport per bulan (Rp)", min_value=0.0, value=0.0, step=10000.0, format="%.0f")
-
-biaya_operasional_lain = st.number_input(
-    "Biaya operasional lain (opsional, Rp/bulan)",
-    min_value=0.0, value=0.0, step=10000.0, format="%.0f"
+total_operasional_bulanan = st.number_input(
+    "Total biaya operasional per bulan (Rp)",
+    min_value=0.0, value=0.0, step=50000.0, format="%.0f"
 )
-
-total_operasional_bulanan = gaji + listrik + bensin + biaya_operasional_lain
 
 jumlah_produk_bulanan = st.number_input(
     "Estimasi jumlah produk terjual per bulan (pcs)",
