@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gudang — Dashboard Stok</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ============ LOGIN SCREEN ============ -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-tag">GDG-01</div>
+    <h1>Gudang</h1>
+    <p class="login-sub">Masuk untuk mengelola stok barang.</p>
+    <form id="loginForm">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="admin@toko.com" required />
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" required />
+      <button type="submit" class="btn-primary full">Masuk</button>
+      <p id="loginError" class="form-error"></p>
+    </form>
+    <p class="login-hint">Akun default: <b>admin@toko.com</b> / <b>admin123</b> — segera ganti setelah login pertama.</p>
+  </div>
+</div>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">GDG</div>
+      <div>
+        <div class="brand-title">Gudang</div>
+        <div class="brand-sub">Stock control</div>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-item active" data-view="overview">Ringkasan</button>
+      <button class="nav-item" data-view="products">Produk</button>
+      <button class="nav-item" data-view="history">Riwayat</button>
+      <button class="nav-item" data-view="shopee">Sinkron Shopee</button>
+      <button class="nav-item" data-view="team">Tim</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div id="userBadge" class="user-badge"></div>
+      <button id="logoutBtn" class="btn-ghost small">Keluar</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- OVERVIEW -->
+    <section id="view-overview" class="view">
+      <header class="view-header">
+        <div>
+          <div class="eyebrow">01 — Ringkasan</div>
+          <h2>Kondisi gudang hari ini</h2>
+        </div>
+      </header>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Produk</div>
+          <div class="stat-value" id="statProducts">–</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Unit di Stok</div>
+          <div class="stat-value" id="statStock">–</div>
+        </div>
+        <div class="stat-card warn">
+          <div class="stat-label">Stok Menipis</div>
+          <div class="stat-value" id="statLow">–</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Transaksi Hari Ini</div>
+          <div class="stat-value" id="statToday">–</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Aktivitas terbaru</h3>
+          <button class="btn-ghost small" data-view-link="history">Lihat semua</button>
+        </div>
+        <div id="recentHistory" class="table-wrap"></div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="view-products" class="view hidden">
+      <header class="view-header">
+        <div>
+          <div class="eyebrow">02 — Produk</div>
+          <h2>Daftar barang</h2>
+        </div>
+        <div class="header-actions">
+          <input id="productSearch" class="input-inline" placeholder="Cari SKU / nama..." />
+          <button class="btn-primary" id="addProductBtn">+ Produk baru</button>
+        </div>
+      </header>
+      <div class="panel no-pad">
+        <div id="productsTable" class="table-wrap"></div>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section id="view-history" class="view hidden">
+      <header class="view-header">
+        <div>
+          <div class="eyebrow">03 — Riwayat</div>
+          <h2>Keluar masuk barang</h2>
+        </div>
+      </header>
+      <div class="panel no-pad">
+        <div id="historyTable" class="table-wrap"></div>
+      </div>
+    </section>
+
+    <!-- SHOPEE -->
+    <section id="view-shopee" class="view hidden">
+      <header class="view-header">
+        <div>
+          <div class="eyebrow">04 — Marketplace</div>
+          <h2>Sinkron Shopee</h2>
+        </div>
+      </header>
+
+      <div class="panel">
+        <div id="shopeeStatusBox" class="shopee-status">
+          <span class="dot"></span>
+          <span id="shopeeStatusText">Memeriksa status koneksi...</span>
+        </div>
+        <p class="muted">
+          Hubungkan toko Shopee Anda lewat Shopee Open Platform untuk menarik & mendorong data stok
+          secara otomatis. Produk dicocokkan berdasarkan <b>SKU</b> — pastikan SKU di sistem ini sama
+          dengan SKU di Shopee Seller Center.
+        </p>
+        <div class="btn-row">
+          <button id="connectShopeeBtn" class="btn-primary">Hubungkan Toko Shopee</button>
+          <button id="pullStockBtn" class="btn-secondary">Tarik Stok dari Shopee</button>
+        </div>
+        <p id="shopeeMsg" class="form-note"></p>
+      </div>
+
+      <div class="panel">
+        <h3>Cara kerja singkat</h3>
+        <ol class="steps">
+          <li>Daftar App di <a href="https://open.shopee.com" target="_blank" rel="noopener">open.shopee.com</a>, dapatkan Partner ID & Partner Key.</li>
+          <li>Isi kredensial itu ke file <code>.env</code> di server (lihat README).</li>
+          <li>Klik "Hubungkan Toko Shopee" di atas, login dengan akun Seller Center Anda.</li>
+          <li>Setelah terhubung, klik "Tarik Stok dari Shopee" untuk sinkron awal berdasarkan SKU.</li>
+          <li>Selanjutnya, setiap perubahan stok manual bisa didorong ke Shopee lewat tombol "Kirim ke Shopee" di halaman Produk.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- TEAM -->
+    <section id="view-team" class="view hidden">
+      <header class="view-header">
+        <div>
+          <div class="eyebrow">05 — Tim</div>
+          <h2>Pengguna dashboard</h2>
+        </div>
+        <div class="header-actions">
+          <button class="btn-primary" id="addUserBtn">+ Tambah pengguna</button>
+        </div>
+      </header>
+      <div class="panel no-pad">
+        <div id="teamTable" class="table-wrap"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div id="modalBackdrop" class="modal-backdrop hidden">
+  <div id="modalBox" class="modal-box"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
