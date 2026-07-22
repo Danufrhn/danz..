@@ -74,11 +74,25 @@ biaya_proses_pesanan = st.number_input(
     min_value=0.0, value=1250.0, step=250.0, format="%.0f",
     help="Biaya tetap per transaksi yang berhasil diselesaikan (umumnya Rp1.250)."
 )
-biaya_layanan_promo_xtra = st.number_input(
-    "Biaya Promo Xtra (Rp)",
-    min_value=0.0, value=0.0, step=500.0, format="%.0f",
-    help="Hanya berlaku kalau toko ikut program Promo XTRA (maks. sekitar Rp10.000/produk)."
+mode_promo_xtra = st.radio(
+    "Cara isi Biaya Promo Xtra",
+    ["Rupiah (Rp)", "Persentase (%) dari harga jual"],
+    horizontal=True
 )
+if mode_promo_xtra == "Rupiah (Rp)":
+    biaya_layanan_promo_xtra = st.number_input(
+        "Biaya Promo Xtra (Rp)",
+        min_value=0.0, value=0.0, step=500.0, format="%.0f",
+        help="Hanya berlaku kalau toko ikut program Promo XTRA (maks. sekitar Rp10.000/produk)."
+    )
+else:
+    persen_promo_xtra = st.number_input(
+        "Biaya Promo Xtra (%) dari harga jual",
+        min_value=0.0, max_value=100.0, value=0.0, step=0.5,
+        help="Hanya berlaku kalau toko ikut program Promo XTRA."
+    )
+    biaya_layanan_promo_xtra = harga_jual * (persen_promo_xtra / 100)
+    st.caption(f"= Rp {biaya_layanan_promo_xtra:,.0f}".replace(",", "."))
 ongkir_ditanggung_penjual = st.number_input(
     "Subsidi Ongkir (Rp)",
     min_value=0.0, value=0.0, step=500.0, format="%.0f",
