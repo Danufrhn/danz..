@@ -177,7 +177,7 @@ if st.button("➕ Tambah ke Draft", type="primary", disabled=tambah_disabled):
         "Biaya Layanan Gratis Ongkir XTRA": biaya_layanan_gratis_ongkir,
         "Biaya Layanan Promo XTRA": biaya_layanan_promo_xtra,
         "Ongkir Ditanggung Penjual": ongkir_ditanggung_penjual,
-        "Biaya Shopee Lainnya": biaya_shopee_lainnya,
+        "Biaya Lainnya": biaya_shopee_lainnya,
         "% Biaya Operasional": persen_operasional,
     })
     st.success(f"'{nama_produk.strip()}' ditambahkan ke draft ✅")
