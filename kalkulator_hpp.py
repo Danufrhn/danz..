@@ -33,7 +33,7 @@ st.divider()
 # ============================================================
 st.subheader("1️⃣ Harga Modal")
 harga_modal = st.number_input(
-    "Harga modal / bahan baku per produk (Rp)",
+    "Harga modal atau bahan baku per produk (Rp)",
     min_value=0.0, value=0.0, step=500.0, format="%.0f"
 )
 
@@ -60,7 +60,7 @@ harga_jual = st.number_input(
 # ============================================================
 st.subheader("4️⃣ Biaya Shopee")
 st.caption(
-    "Isi sesuai angka riil yang muncul di Rincian Pesanan / Rincian Penghasilan Seller Center kamu. "
+    "Isi sesuai angka riil yang muncul di Rincian Pesanan atau Rincian Penghasilan Seller Center kamu. "
     "Beberapa komponen ini opsional, tergantung program yang kamu ikuti."
 )
 
@@ -120,7 +120,7 @@ st.write(f"**Total Biaya Shopee: Rp {biaya_shopee:,.0f}**".replace(",", "."))
 # 4. BIAYA OPERASIONAL
 # ============================================================
 st.subheader("5️⃣ Biaya Operasional")
-st.caption("Persentase dari harga jual (gaji, listrik, bensin, dll dijumlah jadi satu persentase)")
+st.caption("Harga jual ditambah persentase dari gaji, listrik, bensin, dll.")
 
 persen_operasional = st.number_input(
     "Total biaya operasional (%) dari harga jual",
