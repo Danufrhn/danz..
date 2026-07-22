@@ -70,7 +70,7 @@ biaya_admin_shopee = st.number_input(
     help="Potongan utama per transaksi, besarannya tergantung kategori produk & status toko (Non-Star/Star/Star+)."
 )
 biaya_proses_pesanan = st.number_input(
-    "Biaya Proses Pesanan (Rp)",
+    "Biaya Penanganan (Rp)",
     min_value=0.0, value=1250.0, step=250.0, format="%.0f",
     help="Biaya tetap per transaksi yang berhasil diselesaikan (umumnya Rp1.250)."
 )
@@ -178,7 +178,7 @@ if st.button("➕ Tambah ke Draft", type="primary", disabled=tambah_disabled):
         "Biaya Packaging": biaya_packaging,
         "Harga Jual": harga_jual,
         "Biaya Admin Shopee": biaya_admin_shopee,
-        "Biaya Proses Pesanan": biaya_proses_pesanan,
+        "Biaya Penanganan": biaya_proses_pesanan,
         "Biaya Layanan Gratis Ongkir XTRA": biaya_layanan_gratis_ongkir,
         "Biaya Layanan Promo XTRA": biaya_layanan_promo_xtra,
         "Ongkir Ditanggung Penjual": ongkir_ditanggung_penjual,
@@ -195,7 +195,7 @@ st.divider()
 st.subheader(f"📋 Draft Laporan HPP ({len(st.session_state.draft)} produk)")
 
 SHOPEE_COLS = [
-    "Biaya Admin Shopee", "Biaya Proses Pesanan", "Biaya Layanan Gratis Ongkir XTRA",
+    "Biaya Admin Shopee", "Biaya Penanganan", "Biaya Layanan Gratis Ongkir XTRA",
     "Biaya Layanan Promo XTRA", "Ongkir Ditanggung Penjual", "Biaya Shopee Ads", "Biaya Lainnya",
 ]
 
@@ -277,7 +277,7 @@ else:
             HEADER_ROW = 4
             headers = [
                 "No", "Nama Produk", "Harga Modal (Rp)", "Biaya Packaging (Rp)", "Harga Jual (Rp)",
-                "Biaya Admin Shopee (Rp)", "Biaya Proses Pesanan (Rp)",
+                "Biaya Admin Shopee (Rp)", "Biaya Penanganan (Rp)",
                 "Biaya Layanan Gratis Ongkir XTRA (Rp)", "Biaya Layanan Promo XTRA (Rp)",
                 "Ongkir Ditanggung Penjual (Rp)", "Biaya Shopee Ads (Rp)", "Biaya Lainnya (Rp)",
                 "Total Biaya Shopee (Rp)", "% Biaya Operasional", "Biaya Operasional (Rp)",
@@ -309,7 +309,7 @@ else:
                 ws.cell(row=r, column=4, value=row["Biaya Packaging"])
                 ws.cell(row=r, column=5, value=row["Harga Jual"])
                 ws.cell(row=r, column=6, value=row["Biaya Admin Shopee"])
-                ws.cell(row=r, column=7, value=row["Biaya Proses Pesanan"])
+                ws.cell(row=r, column=7, value=row["Biaya Penanganan"])
                 ws.cell(row=r, column=8, value=row["Biaya Layanan Gratis Ongkir XTRA"])
                 ws.cell(row=r, column=9, value=row["Biaya Layanan Promo XTRA"])
                 ws.cell(row=r, column=10, value=row["Ongkir Ditanggung Penjual"])
