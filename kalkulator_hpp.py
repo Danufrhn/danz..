@@ -60,8 +60,8 @@ harga_jual = st.number_input(
 # ============================================================
 st.subheader("4️⃣ Biaya Shopee")
 st.caption(
-    "Isi sesuai angka riil yang muncul di Rincian Pesanan / Rincian Penghasilan Seller Center kamu. "
-    "Beberapa komponen ini opsional, tergantung program yang kamu ikuti."
+    "Isi sesuai angka riil yang muncul di Rincian Pesanan / Rincian Penghasilan Seller Center. "
+    "Beberapa komponen ini opsional, tergantung program yang diikuti."
 )
 
 biaya_admin_shopee = st.number_input(
@@ -120,7 +120,7 @@ st.write(f"**Total Biaya Shopee: Rp {biaya_shopee:,.0f}**".replace(",", "."))
 # 4. BIAYA OPERASIONAL
 # ============================================================
 st.subheader("5️⃣ Biaya Operasional")
-st.caption("Persentase dari harga jual (gaji, listrik, bensin, dll dijumlah jadi satu persentase)")
+st.caption("Persentase dari harga Modal (gaji, listrik, bensin, dll dijumlah jadi satu persentase)")
 
 persen_operasional = st.number_input(
     "Total biaya operasional (%) dari harga jual",
