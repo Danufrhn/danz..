@@ -33,7 +33,7 @@ st.divider()
 # ============================================================
 st.subheader("1️⃣ Harga Modal")
 harga_modal = st.number_input(
-    "Harga modal / bahan baku per produk (Rp)",
+    "Harga modal Atau bahan baku per produk (Rp)",
     min_value=0.0, value=0.0, step=500.0, format="%.0f"
 )
 
@@ -74,6 +74,7 @@ biaya_proses_pesanan = st.number_input(
     min_value=0.0, value=1250.0, step=250.0, format="%.0f",
     help="Biaya tetap per transaksi yang berhasil diselesaikan (umumnya Rp1.250)."
 )
+st.markdown("**Biaya Promo Xtra**")
 mode_promo_xtra = st.radio(
     "Cara isi Biaya Promo Xtra",
     ["Rupiah (Rp)", "Persentase (%) dari harga jual"],
@@ -220,11 +221,21 @@ else:
     df_preview["Laba"] = df_preview["Harga Jual"] - df_preview["Total HPP"]
     df_preview["Margin %"] = (df_preview["Laba"] / df_preview["Harga Jual"] * 100).fillna(0)
 
-    st.dataframe(
-        df_preview[["Nama Produk", "Harga Modal", "Biaya Packaging", "Harga Jual",
-                     "Total Biaya Shopee", "% Biaya Operasional", "Total HPP", "Laba", "Margin %"]],
-        use_container_width=True, hide_index=True
-    )
+    kolom_tampil = ["Nama Produk", "Harga Modal", "Biaya Packaging", "Harga Jual",
+                    "Total Biaya Shopee", "% Biaya Operasional", "Total HPP", "Laba", "Margin %"]
+    kolom_rp = ["Harga Modal", "Biaya Packaging", "Harga Jual", "Total Biaya Shopee", "Total HPP", "Laba"]
+    kolom_persen = ["% Biaya Operasional", "Margin %"]
+
+    def _fmt_rp(x):
+        return f"Rp {x:,.0f}".replace(",", ".")
+
+    def _fmt_persen(x):
+        return f"{x:,.1f}%".replace(",", ".")
+
+    df_tampil = df_preview[kolom_tampil].copy()
+    styler = df_tampil.style.format({**{c: _fmt_rp for c in kolom_rp}, **{c: _fmt_persen for c in kolom_persen}})
+
+    st.dataframe(styler, use_container_width=True, hide_index=True)
 
     colX, colY = st.columns([2, 1])
     with colX:
@@ -269,6 +280,9 @@ else:
             LEFT = Alignment(horizontal="left", vertical="center")
             thin = Side(style="thin", color="BFBFBF")
             BORDER = Border(left=thin, right=thin, top=thin, bottom=thin)
+
+            CURRENCY_FMT = '[$-421]#,##0;[$-421]-#,##0;"-"'
+            PERCENT_FMT = '0.0%'
 
             N_COLS = 17  # total kolom
 
@@ -340,9 +354,9 @@ else:
                     else:
                         cell.font = FORMULA_FONT
                     if col in (3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16):
-                        cell.number_format = '#,##0;(#,##0);"-"'
+                        cell.number_format = CURRENCY_FMT
                     if col in (13, 17):
-                        cell.number_format = '0.0%'
+                        cell.number_format = PERCENT_FMT
 
             total_row = last_data_row + 2
             ws.merge_cells(f"A{total_row}:B{total_row}")
@@ -365,9 +379,9 @@ else:
                 cell.fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
                 cell.border = BORDER
                 if col in sum_cols:
-                    cell.number_format = '#,##0;(#,##0);"-"'
+                    cell.number_format = CURRENCY_FMT
                 if col in avg_cols:
-                    cell.number_format = '0.0%'
+                    cell.number_format = PERCENT_FMT
 
             ws.freeze_panes = f"A{first_data_row}"
 
