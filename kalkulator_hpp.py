@@ -33,7 +33,7 @@ st.divider()
 # ============================================================
 st.subheader("1️⃣ Harga Modal")
 harga_modal = st.number_input(
-    "Harga modal Atau bahan baku per produk (Rp)",
+    "Harga modal atau bahan baku per produk (Rp)",
     min_value=0.0, value=0.0, step=500.0, format="%.0f"
 )
 
