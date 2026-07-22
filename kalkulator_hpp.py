@@ -120,7 +120,7 @@ st.write(f"**Total Biaya Shopee: Rp {biaya_shopee:,.0f}**".replace(",", "."))
 # 4. BIAYA OPERASIONAL
 # ============================================================
 st.subheader("5️⃣ Biaya Operasional")
-st.caption("Persentase dari harga Modal (gaji, listrik, bensin, dll dijumlah jadi satu persentase)")
+st.caption("Harga jual ditambah persentase dari gaji, listrik, bensin, dll.")
 
 persen_operasional = st.number_input(
     "Total biaya operasional (%) dari harga jual",
