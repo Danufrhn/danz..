@@ -89,15 +89,20 @@ ongkir_ditanggung_penjual = st.number_input(
     min_value=0.0, value=0.0, step=500.0, format="%.0f",
     help="Kalau kamu ikut program subsidi ongkir tertentu yang membebankan sebagian ongkir ke penjual."
 )
-biaya_shopee_lainnya = st.number_input(
-    "Biaya Shopee Lainnya (Rp)",
+biaya_shopee_ads = st.number_input(
+    "Biaya Shopee Ads (Rp)",
+    min_value=0.0, value=0.0, step=500.0, format="%.0f",
+    help="Biaya iklan Shopee Ads (alokasi per produk) kalau kamu pakai fitur ini."
+)
+biaya_lainnya = st.number_input(
+    "Biaya Lainnya (Rp)",
     min_value=0.0, value=0.0, step=500.0, format="%.0f",
     help="Contoh: biaya layanan Pre-Order, Cashback XTRA, komisi affiliate, dll — isi kalau relevan."
 )
 
 biaya_shopee = (
     biaya_admin_shopee + biaya_proses_pesanan + biaya_layanan_gratis_ongkir
-    + biaya_layanan_promo_xtra + ongkir_ditanggung_penjual + biaya_shopee_lainnya
+    + biaya_layanan_promo_xtra + ongkir_ditanggung_penjual + biaya_shopee_ads + biaya_lainnya
 )
 st.write(f"**Total Biaya Shopee: Rp {biaya_shopee:,.0f}**".replace(",", "."))
 
@@ -177,7 +182,8 @@ if st.button("➕ Tambah ke Draft", type="primary", disabled=tambah_disabled):
         "Biaya Layanan Gratis Ongkir XTRA": biaya_layanan_gratis_ongkir,
         "Biaya Layanan Promo XTRA": biaya_layanan_promo_xtra,
         "Ongkir Ditanggung Penjual": ongkir_ditanggung_penjual,
-        "Biaya Lainnya": biaya_shopee_lainnya,
+        "Biaya Shopee Ads": biaya_shopee_ads,
+        "Biaya Lainnya": biaya_lainnya,
         "% Biaya Operasional": persen_operasional,
     })
     st.success(f"'{nama_produk.strip()}' ditambahkan ke draft ✅")
@@ -190,7 +196,7 @@ st.subheader(f"📋 Draft Laporan HPP ({len(st.session_state.draft)} produk)")
 
 SHOPEE_COLS = [
     "Biaya Admin Shopee", "Biaya Proses Pesanan", "Biaya Layanan Gratis Ongkir XTRA",
-    "Biaya Layanan Promo XTRA", "Ongkir Ditanggung Penjual", "Biaya Shopee Lainnya",
+    "Biaya Layanan Promo XTRA", "Ongkir Ditanggung Penjual", "Biaya Shopee Ads", "Biaya Lainnya",
 ]
 
 if not st.session_state.draft:
@@ -256,7 +262,7 @@ else:
             thin = Side(style="thin", color="BFBFBF")
             BORDER = Border(left=thin, right=thin, top=thin, bottom=thin)
 
-            N_COLS = 17  # total kolom
+            N_COLS = 18  # total kolom
 
             ws.merge_cells(f"A1:{get_column_letter(N_COLS)}1")
             ws["A1"] = "LAPORAN HPP PER PRODUK"
@@ -273,7 +279,7 @@ else:
                 "No", "Nama Produk", "Harga Modal (Rp)", "Biaya Packaging (Rp)", "Harga Jual (Rp)",
                 "Biaya Admin Shopee (Rp)", "Biaya Proses Pesanan (Rp)",
                 "Biaya Layanan Gratis Ongkir XTRA (Rp)", "Biaya Layanan Promo XTRA (Rp)",
-                "Ongkir Ditanggung Penjual (Rp)", "Biaya Shopee Lainnya (Rp)",
+                "Ongkir Ditanggung Penjual (Rp)", "Biaya Shopee Ads (Rp)", "Biaya Lainnya (Rp)",
                 "Total Biaya Shopee (Rp)", "% Biaya Operasional", "Biaya Operasional (Rp)",
                 "Total HPP (Rp)", "Laba per Produk (Rp)", "Margin (%)"
             ]
@@ -284,7 +290,7 @@ else:
                 c.alignment = CENTER
                 c.border = BORDER
 
-            col_widths = [5, 22, 14, 14, 12, 14, 14, 16, 15, 15, 14, 15, 13, 15, 13, 15, 10]
+            col_widths = [5, 22, 14, 14, 12, 14, 14, 16, 15, 15, 13, 13, 15, 13, 15, 13, 15, 10]
             for i, w in enumerate(col_widths, start=1):
                 ws.column_dimensions[get_column_letter(i)].width = w
 
@@ -292,9 +298,9 @@ else:
             last_data_row = first_data_row + len(draft_rows) - 1
 
             # Kolom: 1 No,2 Nama,3 Modal,4 Packaging,5 HargaJual,
-            # 6 AdminShopee,7 ProsesPesanan,8 GratisOngkirXtra,9 PromoXtra,10 OngkirDitanggung,11 ShopeeLainnya,
-            # 12 TotalShopee(formula),13 %Operasional,14 BiayaOperasional(formula),
-            # 15 TotalHPP(formula),16 Laba(formula),17 Margin(formula)
+            # 6 AdminShopee,7 ProsesPesanan,8 GratisOngkirXtra,9 PromoXtra,10 OngkirDitanggung,
+            # 11 ShopeeAds,12 BiayaLainnya,13 TotalShopee(formula),14 %Operasional,
+            # 15 BiayaOperasional(formula),16 TotalHPP(formula),17 Laba(formula),18 Margin(formula)
             for i, row in enumerate(draft_rows):
                 r = first_data_row + i
                 ws.cell(row=r, column=1, value=i + 1)
@@ -307,13 +313,14 @@ else:
                 ws.cell(row=r, column=8, value=row["Biaya Layanan Gratis Ongkir XTRA"])
                 ws.cell(row=r, column=9, value=row["Biaya Layanan Promo XTRA"])
                 ws.cell(row=r, column=10, value=row["Ongkir Ditanggung Penjual"])
-                ws.cell(row=r, column=11, value=row["Biaya Shopee Lainnya"])
-                ws.cell(row=r, column=12, value=f"=SUM(F{r}:K{r})")
-                ws.cell(row=r, column=13, value=row["% Biaya Operasional"] / 100)
-                ws.cell(row=r, column=14, value=f"=IFERROR(E{r}*M{r},0)")
-                ws.cell(row=r, column=15, value=f"=C{r}+D{r}+L{r}+N{r}")
-                ws.cell(row=r, column=16, value=f"=E{r}-O{r}")
-                ws.cell(row=r, column=17, value=f"=IFERROR(P{r}/E{r},0)")
+                ws.cell(row=r, column=11, value=row["Biaya Shopee Ads"])
+                ws.cell(row=r, column=12, value=row["Biaya Lainnya"])
+                ws.cell(row=r, column=13, value=f"=SUM(F{r}:L{r})")
+                ws.cell(row=r, column=14, value=row["% Biaya Operasional"] / 100)
+                ws.cell(row=r, column=15, value=f"=IFERROR(E{r}*N{r},0)")
+                ws.cell(row=r, column=16, value=f"=C{r}+D{r}+M{r}+O{r}")
+                ws.cell(row=r, column=17, value=f"=E{r}-P{r}")
+                ws.cell(row=r, column=18, value=f"=IFERROR(Q{r}/E{r},0)")
 
                 for col in range(1, N_COLS + 1):
                     cell = ws.cell(row=r, column=col)
@@ -322,13 +329,13 @@ else:
                         cell.alignment = CENTER
                     if col == 2:
                         cell.alignment = LEFT
-                    if col in (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13):
+                    if col in (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14):
                         cell.font = INPUT_FONT
                     else:
                         cell.font = FORMULA_FONT
-                    if col in (3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16):
+                    if col in (3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17):
                         cell.number_format = '#,##0;(#,##0);"-"'
-                    if col in (13, 17):
+                    if col in (14, 18):
                         cell.number_format = '0.0%'
 
             total_row = last_data_row + 2
@@ -336,8 +343,8 @@ else:
             ws.cell(row=total_row, column=1,
                     value=f"TOTAL / RATA-RATA ({len(draft_rows)} PRODUK)").font = Font(name=FONT_NAME, bold=True)
 
-            sum_cols = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16]
-            avg_cols = [13, 17]
+            sum_cols = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17]
+            avg_cols = [14, 18]
             for col in sum_cols:
                 letter = get_column_letter(col)
                 ws.cell(row=total_row, column=col, value=f"=SUM({letter}{first_data_row}:{letter}{last_data_row})")
